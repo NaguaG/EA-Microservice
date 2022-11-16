@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+  user-service:
+    image: user-service
+    networks:
+      - all
+    ports:
+      - 8080:8080
+    environment:
+      DATABASE HOST: user-db
+      ZIPKIN_SERVER: zipkin
+      SERVICE_DISCOVERY: service-discovery
+      CONFIG_SERVER: config-server
+      PRODUCT_SERVICE: product-service
+
+  api-gateway:
+    image: api-gateway
+    networks:
+      - all
+    ports:
+      - 4848:4848
+    environment:
+      SERVICE_DISCOVERY: service-discovery
+      ZIPKIN_SERVER: zipkin
+  service-discovery:
+    image: service-discovery
+    networks:
+      - all
+    ports:
+      - 8761:8761
+    environment:
+      ZIPKIN_SERVER: zipkin
+      API_GATEWAY: api-gateway
+      CONFIG_SERVER: config-server
+      PRODUCT_SERVICE: product-service
+      USER_SERVICE: user-service
+  config-server:
+    image: config-server
+    networks:
+      - all
+    ports:
+      - 4040:4040
+    environment:
+      ZIPKIN_SERVER: zipkin
+      API_GATEWAY: api-gateway
+      SERVICE_DISCOVERY: service-discovery
+      PRODUCT_SERVICE: product-service
+      USER_SERVICE: user-service
+
+  product-service:
+    image: product-service
+    networks:
+      - all
+    ports:
+      - 9090:9090
+    environment:
+      DATABASE HOST: product-db
+      ZIPKIN_SERVER: zipkin
+      SERVICE_DISCOVERY: service-discovery
+      CONFIG_SERVER: config-server
+      PRODUCT_SERVICE: product-service
+
+
+  product-db:
+    image: postgres
+    restart: always
+    networks:
+      - all
+    environment:
+      POSTGRES_PASSWORD: Manduul5725
+
+  user-db:
+    image: postgres
+#    ports:
+#      - 5433:5432
+    restart: always
+    networks:
+      - all
+    environment:
+      POSTGRES_PASSWORD: Manduul5725
+
+  zipkin:
+    image: openzipkin/zipkin
+    networks:
+       - all
+    ports:
+       - 9411:9411
+

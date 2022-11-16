@@ -1,0 +1,6 @@
+edu/miu/controller/ProductController.class
+edu/miu/repo/ProductRepo.class
+edu/miu/entity/Product.class
+edu/miu/ProductServiceApplication.class
+edu/miu/service/impl/ProductServiceImpl.class
+edu/miu/service/ProductService.class
